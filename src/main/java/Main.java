@@ -13,5 +13,6 @@ public class Main {
         IDiscordClient client = discord.createClient(keys.DiscordBotToken, true); // Your client instance. Of course it should be initialized!
         CommandHandler handler = new Discord4JHandler(client);
         handler.registerCommand(new PastaCommand());
+        System.out.println("Mom's spaghetti's dope (Bot Ready)");
     }
 }
