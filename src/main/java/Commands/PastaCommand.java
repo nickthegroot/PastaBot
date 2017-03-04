@@ -16,12 +16,11 @@ import utils.Keys;
 import java.util.Random;
 
 public class PastaCommand implements CommandExecutor {
-    public static RedditClient redditClient;
+    private static RedditClient redditClient;
+    private static Credentials credentials = Credentials.script("DiscordPastaBot", Keys.RedditPass, Keys.RedditID, Keys.RedditSecret);
 
     public static void main(String[] args) throws OAuthException {
-        final Keys keys = new Keys();
         redditClient = new RedditClient(UserAgent.of("desktop", "com.nbdeg.pastabot", "v0.1", "DiscordPastaBot"));
-        Credentials credentials = Credentials.script("DiscordPastaBot", keys.RedditPass, keys.RedditID, keys.RedditSecret);
 
         if (!redditClient.isAuthenticated()) {
             OAuthData authData = redditClient.getOAuthHelper().easyAuth(credentials);
@@ -30,7 +29,12 @@ public class PastaCommand implements CommandExecutor {
     }
 
     @Command(aliases = {"pasta", "copypasta"}, description = "Gets a random copypasta from /r/copypasta.", usage = "pasta")
-    public static String onPastaCommand(String[] args) {
+    public static String onPastaCommand(String[] args) throws OAuthException {
+        if (!redditClient.isAuthenticated()) {
+            OAuthData authData = redditClient.getOAuthHelper().easyAuth(credentials);
+            redditClient.authenticate(authData);
+        }
+
         FluentRedditClient fluent = new FluentRedditClient(redditClient);
         System.out.println("Preparing Pasta");
         Random random = new Random();
