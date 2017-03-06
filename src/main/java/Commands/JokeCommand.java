@@ -24,7 +24,7 @@ public class JokeCommand implements CommandExecutor {
         try {
             RedditClient redditClient = Reddit.getRedditClient();
             if (!redditClient.isAuthenticated()) {
-                Reddit.authenticateReddit();
+                Reddit.authReddit();
             }
             FluentRedditClient fluent = new FluentRedditClient(redditClient);
             jokes = fluent.subreddit("jokes").fetch();

@@ -20,7 +20,7 @@ public class PastaCommand implements CommandExecutor {
         try {
             RedditClient redditClient = Reddit.getRedditClient();
             if (!redditClient.isAuthenticated()) {
-                Reddit.authenticateReddit();
+                Reddit.authReddit();
             }
             FluentRedditClient fluent = new FluentRedditClient(redditClient);
             copypasta = fluent.subreddit("copypasta").fetch();
