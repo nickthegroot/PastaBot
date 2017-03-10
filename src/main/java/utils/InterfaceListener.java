@@ -12,10 +12,10 @@ public class InterfaceListener {
     public void onReadyEvent(ReadyEvent event) {
         event.getClient().changeStatus(Status.game("~help | " + String.valueOf(event.getClient().getGuilds().size()) + " Servers"));
         System.out.println("" +
-                "Yo\n" +
+                "\nYo\n" +
                 "His palms are sweaty, knees weak, arms are heavy\n" +
-                "There's vomit on his sweater already, mom's spaghetti\n\n" +
-                "Bot Ready");
+                "There's vomit on his sweater already, mom's spaghetti.\n" +
+                "Bot Ready.\n\n");
     }
 
     @EventSubscriber

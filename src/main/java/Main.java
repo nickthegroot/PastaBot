@@ -1,5 +1,6 @@
 import Commands.HelpCommand;
 import Commands.JokeCommand;
+import Commands.KahootCommand;
 import Commands.PastaCommand;
 import de.btobastian.sdcf4j.CommandHandler;
 import de.btobastian.sdcf4j.handler.Discord4JHandler;
@@ -22,6 +23,7 @@ public class Main {
         handler.setDefaultPrefix("~");
         handler.registerCommand(new PastaCommand());
         handler.registerCommand(new JokeCommand());
+        handler.registerCommand(new KahootCommand());
         handler.registerCommand(new HelpCommand(handler));
     }
 }

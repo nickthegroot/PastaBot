@@ -19,23 +19,34 @@ import java.util.Random;
 public class JokeCommand implements CommandExecutor {
 
     @Command(aliases = {"joke", "prank"}, description = "Gets a random joke from /r/jokes.", usage = "joke")
-    public static String onPastaCommand(String[] args) throws OAuthException {
-        Listing<Submission> jokes;
+    public static String onJokeCommand(String[] args) throws OAuthException {
+        Listing<Submission> jokes = null;
+        RedditClient redditClient;
         try {
-            RedditClient redditClient = Reddit.getRedditClient();
+            redditClient = Reddit.getRedditClient();
             if (!redditClient.isAuthenticated()) {
                 Reddit.authReddit();
             }
             FluentRedditClient fluent = new FluentRedditClient(redditClient);
             jokes = fluent.subreddit("jokes").fetch();
-        }   catch (NetworkException | OAuthException e) {
-            System.out.println("Network Error Telling Joke");
-            return "An error occurred, please try again later.";
+        }   catch (NetworkException | NullPointerException e) {
+            Reddit.authReddit();
+            onJokeCommand(args);
         }
 
         Random random = new Random();
         System.out.println("Telling a bad joke.");
-        Submission joke = jokes.get(random.nextInt(jokes.size()));
-        return StringUtils.abbreviate(("**" + joke.getTitle() + "**\n" + joke.getSelftext()), 2000);
+
+        if (jokes != null) {
+            Submission joke = jokes.get(random.nextInt(jokes.size()));
+            if (args.length > 0) {
+                return "Too many arguments! Use `~help` to get usages.";
+            } else if (args.length == 0) {
+                return StringUtils.abbreviate(("**" + joke.getTitle() + "**\n" + joke.getSelftext()), 2000);
+            }
+        }
+
+        // Something went wrong, display error message.
+        return "An error occurred, please try again";
     }
 }

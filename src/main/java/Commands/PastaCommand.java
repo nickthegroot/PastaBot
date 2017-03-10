@@ -15,22 +15,32 @@ import java.util.Random;
 
 public class PastaCommand implements CommandExecutor {
     @Command(aliases = {"pasta", "copypasta"}, description = "Gets a random copypasta from /r/copypasta.", usage = "pasta")
-    public static String onPastaCommand(String[] args) {
-        Listing<Submission> copypasta;
+    public static String onPastaCommand(String[] args) throws OAuthException {
+        Listing<Submission> copypasta = null;
+        RedditClient redditClient;
         try {
-            RedditClient redditClient = Reddit.getRedditClient();
+            redditClient = Reddit.getRedditClient();
             if (!redditClient.isAuthenticated()) {
                 Reddit.authReddit();
             }
             FluentRedditClient fluent = new FluentRedditClient(redditClient);
             copypasta = fluent.subreddit("copypasta").fetch();
-        }   catch (NetworkException | OAuthException e) {
-            System.out.println("Network Error Serving Pasta");
-            return "An error occurred, please try again later.";
+        }   catch (NetworkException | NullPointerException e) {
+            Reddit.authReddit();
+            onPastaCommand(args);
         }
 
         System.out.println("Serving some pasta.");
         Random random = new Random();
-        return StringUtils.abbreviate(copypasta.get(random.nextInt(copypasta.size())).getSelftext(), 2000);
+        if (copypasta != null) {
+            if (args.length > 0) {
+                return "Too many arguments! Use `~help` to get usages.";
+            } else if (args.length == 0) {
+                return StringUtils.abbreviate(copypasta.get(random.nextInt(copypasta.size())).getSelftext(), 2000);
+            }
+        }
+
+        // Something went wrong, display error message
+        return "An error occurred, please try again later.";
     }
 }
