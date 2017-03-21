@@ -15,7 +15,7 @@ public class HelpCommand implements CommandExecutor {
     @Command(aliases = {"help", "commands"}, description = "Shows this page")
     public String onHelpCommand() {
         StringBuilder builder = new StringBuilder();
-        builder.append("```xml"); // a xml code block looks fancy
+        builder.append("```"); // a code block looks fancy
         for (CommandHandler.SimpleCommand simpleCommand : commandHandler.getCommands()) {
             if (!simpleCommand.getCommandAnnotation().showInHelpPage()) {
                 continue; // skip command
